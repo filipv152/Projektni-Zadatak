@@ -24,7 +24,7 @@ int izbornik(const char* const imeDatoteke) {
 	printf("\t\t\tOpcija 2: citanje artikla!\n");
 	printf("\t\t\tOpcija 3: ispisivanje artikla!\n");
 	printf("\t\t\tOpcija 4: pretrazivanje artikla!\n");
-	printf("\t\t\tOpcija 5: promijena preferenci!\n");
+	printf("\t\t\tOpcija 5: promijena preferenci artikala!\n");
 	printf("\t\t\tOpcija 6: brisanje artikla!\n");
 	printf("\t\t\tOpcija 7: brisanje datoteke i izlazak iz programa!\n");
 	printf("\t\t\tOpcija 8: izlaz iz programa!\n");
@@ -61,7 +61,10 @@ int izbornik(const char* const imeDatoteke) {
 		brisanjeAtikala(&pronadeniArtikl, poljeArtikala, imeDatoteke);
 		break;
 	case 7:
-		brisanjeDatoteke(imeDatoteke, poljeArtikala);
+		brisanjeDatoteke(imeDatoteke, poljeArtikala, uvijet);
+		if (uvijet == 0) {
+			return uvijet;
+		}
 		break;
 	case 8:
 		uvijet = izlazIzPrograma(poljeArtikala);
@@ -215,7 +218,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 			return NULL;
 }
 
-int izlazIzPrograma(ARTIKL * poljeArtikala) {
+int izlazIzPrograma(ARTIKL* poljeArtikala) {
 	free(poljeArtikala);
 	return 0;
 }
@@ -243,7 +246,7 @@ void brisanjeAtikala(ARTIKL** const pronadeniArtikl, const ARTIKL* const poljeAr
 	*pronadeniArtikl = NULL;
 }
 
-void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala) {
+void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala, int uvijet) {
 	printf("Zelite li uistinu obrisati datoteku %s, i izaci iz programa?\n", trgovina);
 	printf("Utipkajte \"da\" ako uistinu zelite obrisati datoteku u suprotno utipkajte\"ne\"!\n");
 	char potvrda[3] = { '\0' };
@@ -251,7 +254,15 @@ void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala) {
 	if (!strcmp("da", potvrda)) {
 		remove(trgovina) == 0 ? printf("Uspjesno obrisana datoteka %s!\n", trgovina) : printf("Neuspjesno brisanje datoteke %s!\n", trgovina);
 	}
-	izlazIzPrograma(poljeArtikala);
+	FILE* fp = NULL;
+	printf("Zelite li nastaviti s programom?\n");
+	scanf(" %2s", potvrda);
+	if (!strcmp("da", potvrda)) {
+		inicijalizacija(fp);
+	}
+	else {
+		uvijet = izlazIzPrograma(poljeArtikala);
+	}
 }
 
 void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
@@ -263,9 +274,9 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 
 	char novoIme[20] = {" \0 "};
 	int i, trazenaKategorija, noviIDiKol = 0;;
-	printf("Upisite broj artikla koji želite promijeniti: ");
+	printf("Upisite broj artikla koji Å¾elite promijeniti: ");
 	scanf("%d", &i);
-	printf("Koju kategoriju želite promijeniti?\n(1. Ime, 2. Kategoriju, 3. ID, 4. Proizvodac, 5. Tezinu, 6. Gluten, 7. Secer, 8. Kolicinu)\n");
+	printf("Koju kategoriju Å¾elite promijeniti?\n(1. Ime, 2. Kategoriju, 3. ID, 4. Proizvodac, 5. Tezinu, 6. Gluten, 7. Secer, 8. Kolicinu)\n");
 	scanf("%d", &trazenaKategorija);
 
 	switch (trazenaKategorija) {
@@ -273,13 +284,14 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 		printf("Unesite novo ime artikla: ");
 		getchar();
 		scanf("%19[^\n]", novoIme);
-		*(poljeArtikala + i-1)->ime = novoIme;
+		*(poljeArtikala + i - 1)->ime = *novoIme;
+
 		break;
 	case 2:
 		printf("Unesite novu kategoriju artikla: ");
 		getchar();
 		scanf("%19[^\n]", novoIme);
-		*(poljeArtikala + i - 1)->kategorija = novoIme;
+		*(poljeArtikala + i - 1)->kategorija = *novoIme;
 		break;
 	case 3:
 		printf("Unesite novi ID artikla: ");
@@ -290,25 +302,25 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 		printf("Unesite novg proizvodaca artikla: ");
 		getchar();
 		scanf("%19[^\n]", novoIme);
-		*(poljeArtikala + i - 1)->proizvodac = novoIme;
+		*(poljeArtikala + i - 1)->proizvodac = *novoIme;
 		break;
 	case 5:
 		printf("Unesite novu tezinu artikla: ");
 		getchar();
 		scanf("%19[^\n]", novoIme);
-		(poljeArtikala + i - 1)->tezinaUGramima = novoIme;
+		(poljeArtikala + i - 1)->tezinaUGramima = *novoIme;
 		break;
 	case 6:
 		printf("Unesite gluten artikla: ");
 		getchar();
 		scanf("%2[^\n]", novoIme);
-		*(poljeArtikala + i - 1)->gluten = novoIme;
+		*(poljeArtikala + i - 1)->gluten = *novoIme;
 		break;
 	case 7:
 		printf("Unesite secer artikla: ");
 		getchar();
 		scanf("%19[^\n]", novoIme);
-		*(poljeArtikala + i - 1)->secer = novoIme;
+		*(poljeArtikala + i - 1)->secer = *novoIme;
 		break;
 	case 8:
 		printf("Unesite novu kolicinu artikla: ");
@@ -318,5 +330,4 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 	default:
 		printf("Krivi unos\n");
 	 }
-
 }
