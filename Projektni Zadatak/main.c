@@ -20,5 +20,6 @@ int main(void) {
 }
 
 /*
-popravit za dodavanje 1. artikla, i za promijenu preferenci
+popravit za dodavanje 1. artikla, i za promijenu preferenci, problem ako se
+nakanadno kao druga ili bilo koja po redu naredba izvrsuje brisanje datoteke, program ne radi kako treba
 */
