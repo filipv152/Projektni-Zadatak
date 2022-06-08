@@ -52,19 +52,20 @@ int izbornik(const char* const imeDatoteke) {
 		ispisivanjeArtikala(poljeArtikala);
 		break;
 	case 4:
+		printf("prije pa: %p\n", pronadeniArtikl);
 		pronadeniArtikl = (ARTIKL*)pretrazivanjeArtikala(poljeArtikala);
+		printf("poslje pa: %p\n", pronadeniArtikl);
 		break;
 	case 5:
-		promjenaPreferenci(poljeArtikala, imeDatoteke);
+		promjenaPreferenci(poljeArtikala, "trgovina.bin");
 		break;
 	case 6:
-		brisanjeAtikala(&pronadeniArtikl, poljeArtikala, imeDatoteke);
+		printf("predana memorija: %p\n", pronadeniArtikl);
+		brisanjeArtikala(pronadeniArtikl, poljeArtikala, "trgovina2.bin");
 		break;
 	case 7:
-		brisanjeDatoteke(imeDatoteke, poljeArtikala, uvijet);
-		if (uvijet == 0) {
-			return uvijet;
-		}
+		brisanjeDatoteke("trgovina.bin", poljeArtikala, uvijet);
+		uvijet = izlazIzPrograma(poljeArtikala);
 		break;
 	case 8:
 		uvijet = izlazIzPrograma(poljeArtikala);
@@ -88,13 +89,13 @@ void dodajArtikl(const char* const imeDatoteke) {
 	temp.br = brojArtikala;
 	printf("Unesite kategoriju artikla!\n");
 	getchar();
-	scanf("%19[^\n]", temp.kategorija);
+	scanf("%39[^\n]", temp.kategorija);
 	printf("Unesite ime artikla!\n");
 	getchar();
-	scanf("%19[^\n]", temp.ime);
+	scanf("%39[^\n]", temp.ime);
 	printf("Unesite proizvodaca artikla!\n");
 	getchar();
-	scanf("%19[^\n]", temp.proizvodac);
+	scanf("%39[^\n]", temp.proizvodac);
 	printf("Unesite id artikla!\n");
 	getchar();
 	scanf("%d", &temp.id);
@@ -144,7 +145,8 @@ void ispisivanjeArtikala(const ARTIKL* const poljeArtikala) {
 	int i;
 	for (i = 0; i < brojArtikala; i++)
 	{
-		printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+		printf("mem: %p\tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+			(poljeArtikala+i),
 			i + 1,
 			(poljeArtikala + i)->kategorija,
 			(poljeArtikala + i)->id,
@@ -177,7 +179,8 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->ime)) {
 				printf("Artikl je pronaden!\n");
-				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+					(poljeArtikala+i),
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -187,8 +190,11 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
+				printf("mem: %p\n", (poljeArtikala + i));
+				return (poljeArtikala + i);
 			}
 		}
+		
 		break;
 	case 2:
 		printf("Unesite ID proizvoda za pronalazak artikla.\n");
@@ -197,7 +203,8 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (trazeniBroj == (poljeArtikala + i)->id) {
 				printf("Artikl je pronaden!\n");
-				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+					(poljeArtikala + i),
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -207,8 +214,11 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
+				printf("mem: %p\n", (poljeArtikala + i));
+				return (poljeArtikala + i);
 			}
 		}
+		
 		break;
 	case 3:
 		printf("Unesite kategoriju proizvoda za pronalazak artikla.\n");
@@ -218,7 +228,8 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->kategorija)) {
 				printf("Artikl je pronaden!\n");
-				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+					(poljeArtikala + i),
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -228,8 +239,11 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
+				printf("mem: %p\n", (poljeArtikala + i));
+				return (poljeArtikala + i);
 			}
 		}
+		
 		break;
 	case 4:
 		printf("Unesite ime proizvodaca za pronalazak artikla.\n");
@@ -239,7 +253,8 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->proizvodac)) {
 				printf("Artikl je pronaden!\n");
-				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
+					(poljeArtikala + i),
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -249,8 +264,11 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
+				printf("mem: %p\n", (poljeArtikala + i));
+				return (poljeArtikala + i);
 			}
 		}
+		
 		break;
 	default:
 		printf("Krivo unesena vrijednost\n");
@@ -263,28 +281,32 @@ int izlazIzPrograma(ARTIKL* poljeArtikala) {
 	return 0;
 }
 
-void brisanjeAtikala(ARTIKL** const pronadeniArtikl, const ARTIKL* const poljeArtikala, const char* const imeDatoteke) {
-	FILE* pF = fopen(imeDatoteke, "wb");
+void brisanjeArtikala(ARTIKL** const trazeniArtikl, const ARTIKL* const poljeArtikala, const char* const trgovina) {
+	FILE* pF = fopen(trgovina, "wb");
 	if (pF == NULL) {
-		perror("Artikla studenta iz datoteke trgovina.bin");
+		perror("Brisanje studenta iz datoteke studenti.bin");
 		exit(EXIT_FAILURE);
 	}
 	fseek(pF, sizeof(int), SEEK_SET);
 	int i;
-	int noviBrojacStudenata = 0;
+	int noviBrojacArtikala = 0;
+	printf("\nmem: %p\n", (trazeniArtikl));
 	for (i = 0; i < brojArtikala; i++)
 	{
-		if (*pronadeniArtikl != (poljeArtikala + i)) {
+		if (&trazeniArtikl != (poljeArtikala + i)) {
 			fwrite((poljeArtikala + i), sizeof(ARTIKL), 1, pF);
-			noviBrojacStudenata++;
+			noviBrojacArtikala++;
 		}
 	}
+	printf("nba: %d\n", noviBrojacArtikala);
 	rewind(pF);
-	fwrite(&noviBrojacStudenata, sizeof(int), 1, pF);
+	fwrite(&noviBrojacArtikala, sizeof(int), 1, pF);
 	fclose(pF);
 	printf("Artikl je uspjesno obrisan!\n");
-	*pronadeniArtikl = NULL;
+	*trazeniArtikl = NULL;
 }
+
+
 
 void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala, int uvijet) {
 	printf("Zelite li uistinu obrisati datoteku %s, i izaci iz programa?\n", trgovina);
@@ -295,14 +317,6 @@ void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala, int uvijet) {
 		remove(trgovina) == 0 ? printf("Uspjesno obrisana datoteka %s!\n", trgovina) : printf("Neuspjesno brisanje datoteke %s!\n", trgovina);
 	}
 	FILE* fp = NULL;
-	printf("Zelite li nastaviti s programom?\n");
-	scanf(" %2s", potvrda);
-	if (!strcmp("da", potvrda)) {
-		inicijalizacija(fp);
-	}
-	else {
-		uvijet = izlazIzPrograma(poljeArtikala);
-	}
 }
 
 void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
@@ -366,7 +380,7 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 		scanf("%d", &noviIDiKol);
 		(poljeArtikala + i - 1)->id = noviIDiKol;
 		while (fread(&temp, sizeof(temp), 1, pF) == 1) {
-			if (strcmp(temp.id, novoIme) == 0) {
+			if (temp.id == noviIDiKol) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
 				flag = 0;
