@@ -21,7 +21,7 @@ void ispisivanjeArtikala(const ARTIKL* const);
 void* pretrazivanjeArtikala(ARTIKL* const);
 int izlazIzPrograma(ARTIKL*);
 void brisanjeArtikala(ARTIKL** const, const ARTIKL* const, const char* const);
-void brisanjeDatoteke(const char*, ARTIKL*, int);
+void brisanjeDatoteke(const char*);
 int izbornik(const char* const);
 void promjenaPreferenci(ARTIKL*, const char* const);
 
