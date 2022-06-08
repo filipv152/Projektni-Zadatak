@@ -17,9 +17,11 @@ void inicijalizacija(FILE* fp) {
 }
 
 int izbornik(const char* const imeDatoteke) {
-	printf("====================");
+	printf("\t\t\t\t-Izbornik-\n");
+	printf("\t\t\t\t~~~~~~~~~~\n");
+	printf("--------------------");
 	printf("Odaberite jednu od ponudenih opcija:");
-	printf("====================\n");
+	printf("--------------------\n");
 	printf("\t\t\tOpcija 1: dodavanje artikla!\n");
 	printf("\t\t\tOpcija 2: citanje artikla!\n");
 	printf("\t\t\tOpcija 3: ispisivanje artikla!\n");
@@ -28,8 +30,7 @@ int izbornik(const char* const imeDatoteke) {
 	printf("\t\t\tOpcija 6: brisanje artikla!\n");
 	printf("\t\t\tOpcija 7: brisanje datoteke i izlazak iz programa!\n");
 	printf("\t\t\tOpcija 8: izlaz iz programa!\n");
-	printf("======================================\
-======================================\n");
+	printf("----------------------------------------------------------------------------\n");
 	int uvijet = 0;
 	static ARTIKL* poljeArtikala = NULL;
 	static ARTIKL* pronadeniArtikl = NULL;
@@ -61,10 +62,10 @@ int izbornik(const char* const imeDatoteke) {
 		break;
 	case 6:
 		printf("predana memorija: %p\n", pronadeniArtikl);
-		brisanjeArtikala(pronadeniArtikl, poljeArtikala, "trgovina2.bin");
+		brisanjeArtikala(&pronadeniArtikl, poljeArtikala, "trgovina.bin");
 		break;
 	case 7:
-		brisanjeDatoteke("trgovina.bin", poljeArtikala, uvijet);
+		brisanjeDatoteke("trgovina.bin");
 		uvijet = izlazIzPrograma(poljeArtikala);
 		break;
 	case 8:
@@ -128,13 +129,14 @@ void* citanjeArtikala(const char* const imeDatoteke) {
 	}
 	fread(&brojArtikala, sizeof(int), 1, pF);
 	printf("Broj artikala u trgovini: %d.\n", brojArtikala);
-	ARTIKL* poljeFilmova = (ARTIKL*)calloc(brojArtikala, sizeof(ARTIKL));
-	if (poljeFilmova == NULL) {
+	ARTIKL* poljeArtikala = (ARTIKL*)calloc(brojArtikala, sizeof(ARTIKL));
+	if (poljeArtikala == NULL) {
 		perror("Zauzimanje memorije za trgovinu");
 		return NULL;
 	}
-	fread(poljeFilmova, sizeof(ARTIKL), brojArtikala, pF);
-	return poljeFilmova;
+	fread(poljeArtikala, sizeof(ARTIKL), brojArtikala, pF);
+	fclose(pF);
+	return poljeArtikala;
 }
 
 void ispisivanjeArtikala(const ARTIKL* const poljeArtikala) {
@@ -179,8 +181,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->ime)) {
 				printf("Artikl je pronaden!\n");
-				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
-					(poljeArtikala+i),
+				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -190,7 +191,6 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
-				printf("mem: %p\n", (poljeArtikala + i));
 				return (poljeArtikala + i);
 			}
 		}
@@ -203,8 +203,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (trazeniBroj == (poljeArtikala + i)->id) {
 				printf("Artikl je pronaden!\n");
-				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
-					(poljeArtikala + i),
+				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -214,7 +213,6 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
-				printf("mem: %p\n", (poljeArtikala + i));
 				return (poljeArtikala + i);
 			}
 		}
@@ -228,8 +226,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->kategorija)) {
 				printf("Artikl je pronaden!\n");
-				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
-					(poljeArtikala + i),
+				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -239,7 +236,6 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
-				printf("mem: %p\n", (poljeArtikala + i));
 				return (poljeArtikala + i);
 			}
 		}
@@ -253,8 +249,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 		{
 			if (!strcmp(trazenoIme, (poljeArtikala + i)->proizvodac)) {
 				printf("Artikl je pronaden!\n");
-				printf("mem: %p \tArtikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
-					(poljeArtikala + i),
+				printf("Artikl broj %d.\tKategorija: %s\tID: %d.\tIme: %s\tProizvodac: %s\nKolicina: %d\tTezina u gramima: %dg\tGluten: %s\tSecer: %s\n\n",
 					i + 1,
 					(poljeArtikala + i)->kategorija,
 					(poljeArtikala + i)->id,
@@ -264,7 +259,6 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 					(poljeArtikala + i)->tezinaUGramima,
 					(poljeArtikala + i)->gluten,
 					(poljeArtikala + i)->secer);
-				printf("mem: %p\n", (poljeArtikala + i));
 				return (poljeArtikala + i);
 			}
 		}
@@ -273,7 +267,7 @@ void* pretrazivanjeArtikala(ARTIKL* const poljeArtikala) {
 	default:
 		printf("Krivo unesena vrijednost\n");
 	}
-			return NULL;
+	return NULL;
 }
 
 int izlazIzPrograma(ARTIKL* poljeArtikala) {
@@ -290,15 +284,13 @@ void brisanjeArtikala(ARTIKL** const trazeniArtikl, const ARTIKL* const poljeArt
 	fseek(pF, sizeof(int), SEEK_SET);
 	int i;
 	int noviBrojacArtikala = 0;
-	printf("\nmem: %p\n", (trazeniArtikl));
 	for (i = 0; i < brojArtikala; i++)
 	{
-		if (&trazeniArtikl != (poljeArtikala + i)) {
+		if (*trazeniArtikl != (poljeArtikala + i)) {
 			fwrite((poljeArtikala + i), sizeof(ARTIKL), 1, pF);
 			noviBrojacArtikala++;
 		}
 	}
-	printf("nba: %d\n", noviBrojacArtikala);
 	rewind(pF);
 	fwrite(&noviBrojacArtikala, sizeof(int), 1, pF);
 	fclose(pF);
@@ -306,9 +298,7 @@ void brisanjeArtikala(ARTIKL** const trazeniArtikl, const ARTIKL* const poljeArt
 	*trazeniArtikl = NULL;
 }
 
-
-
-void brisanjeDatoteke(const char* trgovina, ARTIKL* poljeArtikala, int uvijet) {
+void brisanjeDatoteke(const char* trgovina) {
 	printf("Zelite li uistinu obrisati datoteku %s, i izaci iz programa?\n", trgovina);
 	printf("Utipkajte \"da\" ako uistinu zelite obrisati datoteku u suprotno utipkajte\"ne\"!\n");
 	char potvrda[3] = { '\0' };
@@ -327,10 +317,10 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 	}
 	ARTIKL temp = { 0 };
 	char novoIme[20] = {" \0 "};
-	int i, flag = 0, trazenaKategorija, noviIDiKol = 0;;
-	printf("Upisite broj artikla koji želite promijeniti: ");
+	int i, trazenaKategorija, noviBroj = 0;;
+	printf("Upisite broj artikla koji zelite promijeniti: ");
 	scanf("%d", &i);
-	printf("Koju kategoriju želite promijeniti?\n(1. Ime, 2. Kategoriju, 3. ID, 4. Proizvodac, 5. Tezinu, 6. Gluten, 7. Secer, 8. Kolicinu)\n");
+	printf("Koju kategoriju zelite promijeniti?\n(1. Ime, 2. Kategoriju, 3. ID, 4. Proizvodac, 5. Tezinu, 6. Gluten, 7. Secer, 8. Kolicinu)\n");
 	scanf("%d", &trazenaKategorija);
 
 	switch (trazenaKategorija) {
@@ -343,15 +333,13 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 			if (strcmp(temp.ime, novoIme) == 0) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.ime == novoIme) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
 			}
-		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!\n");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!\n");
 		}
 		fclose(pF);
 		break;
@@ -364,36 +352,37 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 			if (strcmp(temp.kategorija, novoIme) == 0) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.kategorija == novoIme) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	case 3:
 		printf("Unesite novi ID artikla: ");
-		scanf("%d", &noviIDiKol);
-		(poljeArtikala + i - 1)->id = noviIDiKol;
+		scanf("%d", &noviBroj);
+		(poljeArtikala + i - 1)->id = noviBroj;
 		while (fread(&temp, sizeof(temp), 1, pF) == 1) {
-			if (temp.id == noviIDiKol) {
+			if (temp.id == noviBroj) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.id == noviBroj) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
+		
 		fclose(pF);
+		break;
 	case 4:
 		printf("Unesite novg proizvodaca artikla: ");
 		getchar();
@@ -403,37 +392,38 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 			if (strcmp(temp.proizvodac, novoIme) == 0) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.proizvodac == novoIme) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	case 5:
 		printf("Unesite novu tezinu artikla: ");
 		getchar();
-		scanf("%19[^\n]", novoIme);
-		(poljeArtikala + i - 1)->tezinaUGramima = *novoIme;
+		printf("Unesite novi ID artikla: ");
+		scanf("%d", &noviBroj);
+		(poljeArtikala + i - 1)->tezinaUGramima = noviBroj;
 		while (fread(&temp, sizeof(temp), 1, pF) == 1) {
-			if (strcmp(temp.tezinaUGramima, novoIme) == 0) {
+			if (temp.tezinaUGramima == noviBroj) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.tezinaUGramima == noviBroj) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	case 6:
 		printf("Unesite gluten artikla: ");
 		getchar();
@@ -443,17 +433,17 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 			if (strcmp(temp.gluten, novoIme) == 0) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.gluten == novoIme) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	case 7:
 		printf("Unesite secer artikla: ");
 		getchar();
@@ -463,36 +453,36 @@ void promjenaPreferenci(ARTIKL* poljeArtikala, const char* const imeDatoteke) {
 			if (strcmp(temp.secer, novoIme) == 0) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.secer == novoIme) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	case 8:
-		printf("Unesite novu kolicinu artikla: ");
-		scanf("%d", &noviIDiKol);
-		(poljeArtikala + i - 1)->kolicina = noviIDiKol;
+		printf("Unesite novi ID artikla: ");
+		scanf("%d", &noviBroj);
+		(poljeArtikala + i - 1)->kolicina = noviBroj;
 		while (fread(&temp, sizeof(temp), 1, pF) == 1) {
-			if (strcmp(temp.kolicina, novoIme) == 0) {
+			if (temp.kolicina == noviBroj) {
 				fseek(pF, sizeof(temp), 1);
 				fwrite(&temp, sizeof(temp), 1, pF);
-				flag = 0;
-				break;
+				if (temp.kolicina == noviBroj) {
+					printf("\n Uspiješno azurirano!\n");
+				}
+				else {
+					printf("\n Pogreska u azuriranju!\n");
+				}
+				
 			}
 		}
-		if (flag == 0) {
-			printf("\n Uspiješno azurirano!");
-		}
-		else {
-			printf("\n Pogreska u azuriranju!");
-		}
 		fclose(pF);
+		break;
 	default:
 		printf("Krivi unos\n");
 		fclose(pF); 
