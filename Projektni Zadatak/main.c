@@ -20,6 +20,6 @@ int main(void) {
 }
 
 /*
-problem ako se nakanadno kao druga ili bilo koja po redu naredba izvrsuje brisanje datoteke, program ne radi kako treba,
-birsanje artikala ne brise kako treba
+problem kada se unosi prvi artikl u svijezu datoteku podatci nisu dobri,
+promijena preferneci ne radi
 */
