@@ -20,7 +20,7 @@ void* citanjeArtikala(const char* const);
 void ispisivanjeArtikala(const ARTIKL* const);
 void* pretrazivanjeArtikala(ARTIKL* const);
 int izlazIzPrograma(ARTIKL*);
-void brisanjeAtikala(ARTIKL** const, const ARTIKL* const, const char* const);
+void brisanjeArtikala(ARTIKL** const, const ARTIKL* const, const char* const);
 void brisanjeDatoteke(const char*, ARTIKL*, int);
 int izbornik(const char* const);
 void promjenaPreferenci(ARTIKL*, const char* const);
