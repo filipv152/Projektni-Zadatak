@@ -86,7 +86,7 @@ void dodajArtikl(const char* const imeDatoteke, const ARTIKL* poljeArtikala) {
 	temp.br = brojArtikala;
 	printf("Unesite kategoriju artikla!\n");
 	getchar();
-	scanf("%19[^\n]", temp.kategorija);
+	scanf(" %19[^\n]", temp.kategorija);
 	printf("Unesite ime artikla!\n");
 	getchar();
 	scanf("%39[^\n]", temp.ime);
@@ -269,7 +269,7 @@ int izlazIzPrograma(ARTIKL* poljeArtikala) {
 	return 0;
 }
 
-void brisanjeArtikala(ARTIKL** const trazeniArtikl, const ARTIKL* poljeArtikala, const char* const trgovina) {
+void brisanjeArtikala(ARTIKL** const trazeniArtikl, const ARTIKL* poljeArtikala, const char* trgovina) {
 	FILE* pF = fopen(trgovina, "wb");
 	if (pF == NULL) {
 		perror("Brisanje artikla iz datoteke trgovina.bin");
@@ -324,11 +324,11 @@ void promjenaKarakteristikaArikla(ARTIKL* poljeArtikala, const char* const imeDa
 	switch (trazenaKategorija) {
 	case '1':
 		printf("Unesite novo ime artikla: ");
-		scanf("%19[^\n]", poljeArtikala[i - 1].ime);
+		scanf(" %19[^\n]", poljeArtikala[i - 1].ime);
 		break;
 	case '2':
 		printf("Unesite novu kategoriju artikla: ");
-		scanf("%19[^\n]", poljeArtikala[i - 1].kategorija);
+		scanf(" %19[^\n]", poljeArtikala[i - 1].kategorija);
 		break;
 	case '3':
 		printf("Unesite novi ID artikla: ");
@@ -336,7 +336,7 @@ void promjenaKarakteristikaArikla(ARTIKL* poljeArtikala, const char* const imeDa
 		break;
 	case '4':
 		printf("Unesite novog proizvodaca artikla: ");
-		scanf("%39[^\n]", poljeArtikala[i - 1].proizvodac);
+		scanf(" %39[^\n]", poljeArtikala[i - 1].proizvodac);
 		break;
 	case '5':
 		printf("Unesite novu masu artikla: ");
@@ -344,11 +344,11 @@ void promjenaKarakteristikaArikla(ARTIKL* poljeArtikala, const char* const imeDa
 		break;
 	case '6':
 		printf("Unesite gluten artikla: ");
-		scanf("%2[^\n]", poljeArtikala[i - 1].gluten);
+		scanf(" %2[^\n]", poljeArtikala[i - 1].gluten);
 		break;
 	case '7':
 		printf("Unesite secer artikla: ");
-		scanf("%2[^\n]", poljeArtikala[i - 1].secer);
+		scanf(" %2[^\n]", poljeArtikala[i - 1].secer);
 		break;
 	case '8':
 		printf("Unesite novu kolicinu artikla: ");
@@ -359,7 +359,7 @@ void promjenaKarakteristikaArikla(ARTIKL* poljeArtikala, const char* const imeDa
 		fclose(pF);
 	}
 	fseek(pF, 4, SEEK_SET);
-	fseek(pF, sizeof(ARTIKL)*(i-1), SEEK_CUR);
+	fseek(pF, sizeof(ARTIKL) * (i - 1), SEEK_CUR);
 	fwrite((poljeArtikala + i - 1), sizeof(ARTIKL), 1, pF);
 	fclose(pF);
 }
