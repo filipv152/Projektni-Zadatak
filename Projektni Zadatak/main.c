@@ -18,8 +18,3 @@ int main(void) {
 
 	return 0;
 }
-
-/*
-problem kada se unosi prvi artikl u svijezu datoteku podatci nisu dobri,
-promijena preferneci ne radi
-*/
