@@ -15,6 +15,4 @@ int main(void) {
 	}
 	printf("Zavrsetak programa!\n");
 	return 0;
-
-	return 0;
 }
